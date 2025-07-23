@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'screen/home-hive-pg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'screen/welcome-pg.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
@@ -21,7 +23,7 @@ class MyAppHive extends StatelessWidget {
     return MaterialApp(
       title: "local storage",
       debugShowCheckedModeBanner: false,
-      home: HomeHivePg(),
+      home: welcomePg(),
     );
   }
 }

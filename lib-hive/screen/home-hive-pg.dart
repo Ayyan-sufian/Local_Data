@@ -25,13 +25,13 @@ class _HomeHivePgState extends State<HomeHivePg> {
   @override
   void initState() {
     super.initState();
-    refreshItem(2, 2);
+    refreshItem(null, null, null, null);
     imageBytes = retrieveImg();
   }
 
   //refreshItem function
 
-  void refreshItem(int? minAge, int? maxAge) {
+  void refreshItem(int? minAge, int? maxAge, bool? even, bool? odd) {
     final data = _myBox.keys
         .map((key) {
           final item = _myBox.get(key);
@@ -41,10 +41,12 @@ class _HomeHivePgState extends State<HomeHivePg> {
               item["age"] != null &&
               item["age"].toString().trim().isNotEmpty) {
             final int age = int.tryParse(item["age"].toString()) ?? -1;
-            if (minAge != null && maxAge != null)
-              if (age >= minAge && age <= maxAge) {
-                return {"key": key, "name": item["name"], "age": item["age"]};
-              }
+            if (minAge != null && maxAge != null) {
+              if (age < minAge || age > maxAge) return null;
+            }
+            if (even == true && age % 2 != 0) return null;
+            if (odd == true && age % 2 != 1) return null;
+            return {"key": key, "name": item["name"], "age": item["age"]};
           }
           return null;
         })
@@ -60,7 +62,7 @@ class _HomeHivePgState extends State<HomeHivePg> {
 
   Future<void> _createItem(Map<String, dynamic> newItem) async {
     await _myBox.add(newItem);
-    refreshItem(2, 2);
+    refreshItem(null, null, null, null);
   }
 
   //pop code
@@ -233,24 +235,44 @@ class _HomeHivePgState extends State<HomeHivePg> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  refreshItem(0, 9);
+                  refreshItem(0, 9, null, null);
                 },
-                child: Text("Age:0 > 9"),
+                child: Text("Age:0 > 9", style: TextStyle(color: Colors.black)),
               ),
               ElevatedButton(
                 onPressed: () {
-                  refreshItem(10, 19);
+                  refreshItem(10, 19, null, null);
                 },
-                child: Text("Age:10 > 19"),
+                child: Text(
+                  "Age:10 > 19",
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
               ElevatedButton(
                 onPressed: () {
-                  refreshItem(20, 100);
+                  refreshItem(20, 100, null, null);
                 },
                 child: Text(
                   "Age:20 > 100",
                   style: TextStyle(color: Colors.black),
                 ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  refreshItem(0, 100, true, null);
+                },
+                child: Text("Even age", style: TextStyle(color: Colors.black)),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  refreshItem(0, 100, null, true);
+                },
+                child: Text("Odd age", style: TextStyle(color: Colors.black)),
               ),
             ],
           ),

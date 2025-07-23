@@ -40,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Text("Note :\n Here your data store in file."),
               TextField(
                 controller: _nameController,
                 decoration: InputDecoration(label: Text("Name")),
@@ -93,33 +94,37 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('SQflite project')),
-      body: ListView.builder(
-        itemCount: students.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(students[index].name),
-            subtitle: Text(students[index].age.toString()),
-            trailing: SizedBox(
-              width: 100,
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      _showFormDialog(students[index]);
-                    },
-                    icon: Icon(Icons.edit),
+      body: Stack(
+        children: [
+          ListView.builder(
+            itemCount: students.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(students[index].name),
+                subtitle: Text(students[index].age.toString()),
+                trailing: SizedBox(
+                  width: 100,
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          _showFormDialog(students[index]);
+                        },
+                        icon: Icon(Icons.edit),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          _deleteStudent(students[index].id);
+                        },
+                        icon: Icon(Icons.delete),
+                      ),
+                    ],
                   ),
-                  IconButton(
-                    onPressed: () {
-                      _deleteStudent(students[index].id);
-                    },
-                    icon: Icon(Icons.delete),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+                ),
+              );
+            },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
