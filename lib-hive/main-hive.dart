@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'screen/home-hive-pg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'screen/welcome-pg.dart';

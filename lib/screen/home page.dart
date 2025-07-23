@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sqlite_project/models/student_model.dart';
 import 'package:sqlite_project/services/db_helper.dart';

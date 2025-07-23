@@ -1,7 +1,4 @@
-import 'dart:io';
 import 'dart:typed_data';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
@@ -237,12 +234,18 @@ class _HomeHivePgState extends State<HomeHivePg> {
                 onPressed: () {
                   refreshItem(0, 9, null, null);
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black12,
+                ),
                 child: Text("Age:0 > 9", style: TextStyle(color: Colors.black)),
               ),
               ElevatedButton(
                 onPressed: () {
                   refreshItem(10, 19, null, null);
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black12,
+                ),
                 child: Text(
                   "Age:10 > 19",
                   style: TextStyle(color: Colors.black),
@@ -252,6 +255,9 @@ class _HomeHivePgState extends State<HomeHivePg> {
                 onPressed: () {
                   refreshItem(20, 100, null, null);
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black12,
+                ),
                 child: Text(
                   "Age:20 > 100",
                   style: TextStyle(color: Colors.black),
@@ -266,15 +272,28 @@ class _HomeHivePgState extends State<HomeHivePg> {
                 onPressed: () {
                   refreshItem(0, 100, true, null);
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black12,
+                ),
                 child: Text("Even age", style: TextStyle(color: Colors.black)),
               ),
               ElevatedButton(
                 onPressed: () {
                   refreshItem(0, 100, null, true);
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black12,
+                ),
                 child: Text("Odd age", style: TextStyle(color: Colors.black)),
               ),
             ],
+          ),
+          ElevatedButton(
+            onPressed: () {
+              refreshItem(null, null, null, null);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.black12),
+            child: Text("NO filter", style: TextStyle(color: Colors.black)),
           ),
           Expanded(
             child: ListView.builder(
