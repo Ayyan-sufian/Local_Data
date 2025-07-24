@@ -57,6 +57,20 @@ class _HomeHivePgState extends State<HomeHivePg> {
     });
   }
 
+  List<Map<String, dynamic>> getEvenAge() {
+    return _item.where((element) {
+      final age = int.tryParse(element['age'].toString()) ?? -1;
+      return age % 2 == 0;
+    }).toList();
+  }
+
+  List<Map<String, dynamic>> getOddAge() {
+    return _item.where((element) {
+      final age = int.tryParse(element['age'].toString()) ?? -1;
+      return age % 2 == 1;
+    }).toList();
+  }
+
   Future<void> _createItem(Map<String, dynamic> newItem) async {
     await _myBox.add(newItem);
     refreshItem(null, null, null, null);
@@ -270,7 +284,10 @@ class _HomeHivePgState extends State<HomeHivePg> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  refreshItem(0, 100, true, null);
+                  setState(() {
+                    _item = getEvenAge();
+                    print(_item.length);
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black12,
@@ -279,7 +296,10 @@ class _HomeHivePgState extends State<HomeHivePg> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  refreshItem(0, 100, null, true);
+                  setState(() {
+                    _item = getOddAge();
+                    print(_item.length);
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black12,
