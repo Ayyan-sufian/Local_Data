@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../services/service-dart.dart';
 import '../weather_models/weather_model.dart';
@@ -13,6 +14,50 @@ class MyAppHome extends StatefulWidget {
 }
 
 class _MyAppHomeState extends State<MyAppHome> {
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      throw Exception('Location service is disabled.');
+    }
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      throw Exception('Location service permission is denied');
+    }
+    if (permission == LocationPermission.deniedForever) {
+      throw Exception('Loction service permission is denied forever.');
+    }
+    return await Geolocator.getCurrentPosition();
+  }
+
+  void _getWeatherByLocation() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final position = await _determinePosition();
+      final weather = await _weatherServices.fetchWeatherByLocation(
+        position.latitude,
+        position.longitude,
+      );
+      final forecast = await _weatherServices.fetchForecastByLocation(
+        position.latitude,
+        position.longitude,
+      );
+      setState(() {
+        _weather = weather;
+        _forecast = forecast;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error:$e')));
+    }
+  }
+
   final TextEditingController _cityNameController = TextEditingController();
 
   final WeatherServices _weatherServices = WeatherServices();
@@ -115,15 +160,29 @@ class _MyAppHomeState extends State<MyAppHome> {
                     ),
                   ),
                   SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                      _getWeather();
-                    },
-                    child: Text(
-                      "Get Weather",
-                      style: TextStyle(color: Colors.black),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          FocusScope.of(context).unfocus();
+                          _getWeather();
+                        },
+                        child: Text(
+                          "Get Weather",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          _getWeatherByLocation();
+                        },
+                        child: Text(
+                          'Get current location',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    ],
                   ),
                   if (_isLoading)
                     Padding(

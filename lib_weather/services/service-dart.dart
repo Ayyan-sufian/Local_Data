@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 
 import '../weather_models/weather_model.dart';
 
@@ -31,6 +32,33 @@ class WeatherServices {
       return list.map((item) => Forecast.fromJson(item)).toList();
     } else {
       throw Exception('Failed to load forecast.');
+    }
+  }
+
+  Future<Weather> fetchWeatherByLocation(double lat, double lon) async {
+    final url = Uri.parse(
+      'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$ApiKey',
+    );
+    final responce = await http.get(url);
+    if (responce.statusCode == 200) {
+      return Weather.fromJson(jsonDecode(responce.body));
+    } else {
+      throw Exception('Failed to load current location.');
+    }
+  }
+
+  Future<List<Forecast>> fetchForecastByLocation(double lat, double lon) async {
+    final url = Uri.parse(
+      'https://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&appid=$ApiKey&units=metric&cnt=40',
+    );
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      final List list = jsonData['list'];
+      return list.map((item) => Forecast.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to load forecast by location.');
     }
   }
 }
